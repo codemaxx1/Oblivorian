@@ -23,7 +23,7 @@ def logEntry(logText):
 
     # write error text to the file
     file.write("-" * 10 + " log " + "-" * 10 + "\t" + str( datetime.now()) + "\n\t" + str(logText) + "\n" + "-" * 10 + " log " + "-" * 10 + "\n\n")
-    print("-" * 10 + " log " + "-" * 10 + "\t" + str( datetime.now()) + "\n\t" + str(logText) + "\n" + "-" * 10 + " log " + "-" * 10 + "\n\n")
+    #print("-" * 10 + " log " + "-" * 10 + "\t" + str( datetime.now()) + "\n\t" + str(logText) + "\n" + "-" * 10 + " log " + "-" * 10 + "\n\n")
 
     # close the file
     file.close()

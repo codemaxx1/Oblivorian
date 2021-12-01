@@ -24,13 +24,30 @@ def scan(host):
 
     logging.logEntry(str("Beginning scan of " + str(target) + " at " + str(datetime.now())))
 
+   # print("/ " + "^"*100 + " \ ")
+    iteration = 1;
+    dist = (portMax - portMin) / 100
+    distRange = 0
+    #print("distribution:" + str(dist))
+
+    #print("< |", end="\r")
+
     for port in range(portMin, portMax):
+        iteration = iteration + 1
+
+        #print("dist = " + str(dist) + "\t iterations: " + str(iteration))
+
+        # status bar of port scan
+        if iteration > distRange:
+            #print("distRange = " + str(distRange) + "\t iterations: " + str(iteration))
+                    distRange= distRange + dist
 
         try:
 
             # connect to socket
             #                       family      type
             s = socket.socket( socket.AF_INET, socket.SOCK_STREAM)
+
             socket.setdefaulttimeout(1)
 
             # attempt to connect to the port
@@ -48,8 +65,10 @@ def scan(host):
 
 
                 logging.logEntry(str("Port " + str(port) + " is open"))
-                command = "sudo netstat -ltnp | grep " + str(port)
 
+
+
+                command = "sudo netstat -ltnp | grep " + str(port)
 
                 # get the process information for the port
                 try:
@@ -76,6 +95,7 @@ def scan(host):
         except socket.error:
             logging.newError("Server not responding")
 
+    print(" >")
     # return the open ports
     return openPorts
 
@@ -88,5 +108,48 @@ def scan(host):
     input: openPorts, an array of the open ports to allow the user to close
     output:
 """
-def closePortsByUser(openPorts):
+def closePortsByUser(openPorts, host):
     logging.logEntry(openPorts)
+
+    ports = []
+    # make an array of the ports
+    for port in openPorts:
+        ports.append(port[0])
+    print("Open Ports: " + str(ports) + "\n")
+
+
+    print("To prevent attack to you system, it is recommended that you terminate the processes llistening to these ports: ")
+
+    # iterate thorugh all the open ports
+    for port in openPorts:
+        deletePort = input("Do you wish to terminate the process on " + str(host) + " at port " + str(port[0]) + "?  It is run by the program " + str(port[1]) + "\n (YES) or (NO)\n" )
+        #print(deletePort)
+
+        # confirm that the user wants to terminate this ports
+        if deletePort.upper() == "YES":
+            confirmed = input("Are you sure?  Closing this port may cause " + str(port[1]) + " to malfunction or fail.\n(YES) or (NO)\n")
+            #print(confirmed)
+
+            # if the user confirms they want to terminate the process listening to the port, kill it
+            if confirmed.upper() == "YES":
+                killCommand = "kill - 9 $(lsof - t - i:" + str(port[0]) + ")"
+
+
+                # get the process information for the port
+                try:
+                    logging.logEntry("killing process")
+                    stdoutdata = subprocess.check_output(killCommand, shell=True)
+                except:
+                    logging.newError("termination error, " + str(host) + " " + str(port[0]) + "was not able to be killed")
+
+                if( stdoutdata ):
+                    print( str(host) + " " + str(port[0]) + "has been successfully terminated")
+
+                else:
+                    print("Some error occured" + str(host) + " " + str(port[0]) + " was unable to be terminated\n")
+
+            else:
+                print("YES command not given.  Canceling program termination\n")
+
+        else:
+            print("YES command not given.  Canceling program termination\n")
