@@ -8,6 +8,7 @@ import logging
 def sniffingScan(host):
     logging.logEntry("running sniffer")
 
+
     host = socket.gethostbyname(host)
 
     # identify the protocol type to listen for
@@ -28,4 +29,4 @@ def sniffingScan(host):
 
 
 
-sniffingScan("locahost")
+#sniffingScan("locahost")
