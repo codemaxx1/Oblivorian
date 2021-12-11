@@ -59,7 +59,7 @@ def infoMenu():
 
         elif choiceToRun == "menu":
             print("Returning to Main Menu\n\n\n")
-
+            print("\n\t.\n\t.\n\t.\n\t.\n\t.\n\t.\n\t.\n\n\t.\n\t.\n\t.\n\t.\n\t.\n\t.\n\t.\n")
             loop = False
 
 

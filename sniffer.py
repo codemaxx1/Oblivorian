@@ -8,25 +8,26 @@ import logging
 def sniffingScan(host):
     logging.logEntry("running sniffer")
 
+    try:
+        host = socket.gethostbyname(host)
 
-    host = socket.gethostbyname(host)
+        # identify the protocol type to listen for
+        if os.name == 'nt':
+            protocol = socket.IPPROTO_IP
+        else:
+            protocol = socket.IPPROTO_ICMP
 
-    # identify the protocol type to listen for
-    if os.name == 'nt':
-        protocol = socket.IPPROTO_IP
-    else:
-        protocol = socket.IPPROTO_ICMP
+        sniffer = socket.socket(socket.AF_INET, socket.SOCK_RAW, protocol)
 
-    sniffer = socket.socket(socket.AF_INET, socket.SOCK_RAW, protocol)
+        sniffer.bind((host, 8080))
 
-    sniffer.bind((host, 8080))
+        # include IP header
+        sniffer.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
 
-    # include IP header
-    sniffer.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
+        #read a packet
+        print(sniffer.recvfrom(65565))
 
-    #read a packet
-    print(sniffer.recvfrom(65565))
-
-
+    except:
+        print("Error encountered running packet sniffer")
 
 #sniffingScan("locahost")

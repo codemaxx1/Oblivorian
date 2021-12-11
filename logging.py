@@ -19,6 +19,7 @@ def newError(errorText):
 
 def logEntry(logText):
     # open the file
+    """
     file = open(fileName, 'a')
 
     # write error text to the file
@@ -27,3 +28,4 @@ def logEntry(logText):
 
     # close the file
     file.close()
+    """
